@@ -3,36 +3,66 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mengarahkan...</title>
-  
-  <!-- Redirect menggunakan JavaScript -->
-  <script>
-    var targetUrl = "https://script.google.com/macros/s/AKfycbyKCNvRTPEMBUJ2wf9Tkjx7sVuq-n70vfM3RfO74r0/dev";
-    window.location.replace(targetUrl);
-  </script>
-  
-  <!-- Fallback redirect jika JavaScript dinonaktifkan -->
-  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbyKCNvRTPEMBUJ2wf9Tkjx7sVuq-n70vfM3RfO74r0/dev">
+  <title>Laporan LTT Pertanian Kabupaten Jembrana</title>
 
   <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    * {
+      box-sizing: border-box;
       margin: 0;
-      background-color: #f4f6f8;
-      color: #333;
+      padding: 0;
     }
-    .card {
+    html, body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background-color: #f4f6f8;
+    }
+
+    /* Iframe Utama yang Menampilkan Apps Script */
+    #app-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    /* Loading Card (Tampil Sebelum Iframe Selesai Memuat) */
+    #loader-card {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       text-align: center;
       padding: 30px;
       background: white;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       max-width: 400px;
+      width: 90%;
+      z-index: 2;
+      transition: opacity 0.4s ease, visibility 0.4s ease;
     }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #e0e0e0;
+      border-top-color: #0969da;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 15px auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
     .btn {
       display: inline-block;
       margin-top: 15px;
@@ -50,11 +80,38 @@
 </head>
 <body>
 
-  <div class="card">
-    <h2>Mengarahkan ke Aplikasi...</h2>
-    <p>Jika halaman tidak berpindah secara otomatis, silakan klik tombol di bawah:</p>
-    <a id="redirect-link" href="https://script.google.com/macros/s/AKfycbyKCNvRTPEMBUJ2wf9Tkjx7sVuq-n70vfM3RfO74r0/dev" class="btn">Buka Aplikasi</a>
+  <!-- Card Indikator Loading -->
+  <div id="loader-card">
+    <div class="spinner"></div>
+    <h2>Memuat Aplikasi...</h2>
+    <p style="margin-top: 8px; color: #666; font-size: 14px;">
+      Jika sistem tidak terbuka dalam beberapa detik, silakan klik tombol di bawah:
+    </p>
+    <a href="https://script.google.com/macros/s/AKfycbyKCNvRTPEMBUJ2wf9Tkjx7sVuq-n70vfM3RfO74r0/dev" target="_blank" class="btn">
+      Buka Manual
+    </a>
   </div>
+
+  <!-- Frame Aplikasi Utama (Menjaga URL Tetap Link GitHub) -->
+  <iframe 
+    id="app-frame"
+    src="https://script.google.com/macros/s/AKfycbyKCNvRTPEMBUJ2wf9Tkjx7sVuq-n70vfM3RfO74r0/dev"
+    allow="geolocation; microphone; camera; clipboard-write"
+    sandbox="allow-forms allow-modals allow-popups allow-same-origin allow-scripts">
+  </iframe>
+
+  <script>
+    var frame = document.getElementById('app-frame');
+    var loader = document.getElementById('loader-card');
+
+    // Sembunyikan loading card saat iframe selesai dimuat
+    frame.onload = function() {
+      loader.style.opacity = '0';
+      setTimeout(function() {
+        loader.style.visibility = 'hidden';
+      }, 400);
+    };
+  </script>
 
 </body>
 </html>
